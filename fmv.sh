@@ -35,7 +35,7 @@ if [ -z "$SOURCE" ]; then
 fi
 
 # Check if the selected source file/directory exists.
-# We check again just in case 'find' listed a file that was deleted mid-selection.
+# Check again just in case 'find' listed a file that was deleted mid-selection.
 if [ ! -e "$SOURCE" ]; then
     echo "Error: Selected source file not found: '$SOURCE'" 1>&2
     exit 2
@@ -60,6 +60,5 @@ else
     echo "Move failed. Check the error message above for details." 1>&2
     exit 3
 fi
-
 # Final newline just in case
 echo
