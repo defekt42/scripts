@@ -24,7 +24,7 @@ DEST="$1"
 # Note: 'fzy' is not a standard POSIX utility and breaks strict portability.
 echo "Use fzy to select the SOURCE file to move. (Press ESC to cancel)" 1>&2
 # Execute find and pipe the output to fzy for selection.
-# The search now starts from the user's home directory ($HOME).
+# The search starts from the user's home directory ($HOME).
 # Use command substitution to capture the user's selection
 SOURCE=$(find "$HOME" -type f | fzy --lines=5 -p 🢔🢔-:Select-File:-🢖🢖)
 
