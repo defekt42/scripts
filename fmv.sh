@@ -7,7 +7,7 @@
 
 # --- Function for clean error messages ---
 usage() {
-    echo "Error: Invalid number of arguments." 1>&2
+    echo "Error: Choose destination." 1>&2
     echo "Usage: $0 <destination_path>" 1>&2
     exit 1
 }
