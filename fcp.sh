@@ -37,21 +37,19 @@ if [ -z "$SOURCE" ]; then
 fi
 
 # Check if the selected source file/directory exists.
-# We check again just in case 'find' listed a file that was deleted mid-selection.
+# Check again just in case 'find' listed a file that was deleted mid-selection.
 if [ ! -e "$SOURCE" ]; then
     echo "Error: Selected source file not found: '$SOURCE'" 1>&2
     exit 2
 fi
 
 # --- Core Logic ---
-# Inform the user about the operation
+# Review the operation
 echo "Copying file:"
-echo "  From: '$SOURCE'"
-echo "  To:   '$DEST'"
-echo ""
+echo "  From: '$SOURCE' --> To: '$DEST'"
 
 # Execute the copy command. 
-# We use the standard 'cp' utility with -i to confirm.
+# Use the standard 'cp' utility with -i to confirm.
 cp -i "$SOURCE" "$DEST"
 
 # --- Error Checking ---
