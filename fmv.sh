@@ -42,12 +42,12 @@ if [ ! -e "$SOURCE" ]; then
 fi
 
 # --- Core Logic ---
-# Inform the user about the operation
+# Review the operation
 echo "Moving file:"
-echo "  From: '$SOURCE' To: '$DEST'"
+echo "  From: '$SOURCE' --> To: '$DEST'"
 
 # Execute the move command. 
-# We use the standard 'mv' utility with -i to confirm.
+# Use the standard 'mv' utility with -i to confirm.
 mv -i "$SOURCE" "$DEST"
 
 # --- Error Checking ---
