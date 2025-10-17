@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# fcp.sh - An interactive file copier using a non-standard selector (fzy).
+# fcp.sh - An interactive file copier using fzy, a fast, simple fuzzy text selector.
 # Note: This script is POSIX-compliant but requires the external utility 'fzy'.
 #
 # Usage: ./fcp.sh <destination_directory>
@@ -13,7 +13,6 @@ usage() {
 }
 
 # --- Argument Validation ---
-
 # Check if exactly one argument (destination) was provided
 if [ "$#" -ne 1 ]; then
     usage
@@ -22,14 +21,14 @@ fi
 DEST="$1"
 
 # --- Source Selection using fzy (Requires external dependency) ---
-# WARNING: 'fzy' is not a standard POSIX utility and breaks strict portability.
+# Note: 'fzy' is not a standard POSIX utility and breaks strict portability..
 # It is included here as per user request for dmenu-like functionality.
 
 echo "Use fzy to select the SOURCE file/directory to copy. (Press ESC to cancel)" 1>&2
 # Execute find and pipe the output to fzy for selection.
-# The search now starts from the user's home directory ($HOME).
+# The search starts from the user's home directory ($HOME).
 # Use command substitution to capture the user's selection
-SOURCE=$(find "$HOME" | fzy)
+SOURCE=$(find "$HOME" -type f | fzy --lines=5 -p 🢔🢔-:Select-File:-🢖🢖)
 
 # Check if selection was cancelled (fzy returns empty string on ESC/cancel)
 if [ -z "$SOURCE" ]; then
@@ -45,9 +44,8 @@ if [ ! -e "$SOURCE" ]; then
 fi
 
 # --- Core Logic ---
-
 # Inform the user about the operation
-echo "Copying file(s):"
+echo "Copying file:"
 echo "  From: '$SOURCE'"
 echo "  To:   '$DEST'"
 echo ""
@@ -57,7 +55,6 @@ echo ""
 cp -i "$SOURCE" "$DEST"
 
 # --- Error Checking ---
-
 # Check the exit status of the previous command ($?)
 if [ "$?" -eq 0 ]; then
     echo "Successfully copied '$SOURCE' to '$DEST'."
