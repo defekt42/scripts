@@ -21,7 +21,7 @@ fi
 DEST="$1"
 
 # --- Source Selection using fzy (Requires external dependency) ---
-# Note: 'fzy' is not a standard POSIX utility and breaks strict portability..
+# Note: 'fzy' is not a standard POSIX utility and breaks strict portability.
 echo "Use fzy to select the SOURCE file/directory to copy. (Press ESC to cancel)" 1>&2
 # Execute find and pipe the output to fzy for selection.
 # The search starts from the user's home directory ($HOME).
