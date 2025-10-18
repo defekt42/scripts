@@ -1,0 +1,53 @@
+#How to open ed and go to a specific line
+#This method uses a "heredoc" to pipe commands to ed at the command line. This can be used to perform edits non-interactively. 
+#(printf '%s\n' '<line_number>' 'p') | ed <filename>
+# add function to .kshrc file
+
+f() {
+    # Usage guard
+    if [ -z "$1" ]; then
+        print "Usage: f <pattern> [directories...]" >&2
+        return 1
+    fi
+
+    local PATTERN="$1"
+    shift
+    local SEARCH_PATHS="$@"
+    [ -z "$SEARCH_PATHS" ] && SEARCH_PATHS="$HOME"
+
+    local EXCLUDE_FILE="${HISTFILE:-$HOME/.ksh_history}"
+    local REL_EXCLUDE_FILE="${EXCLUDE_FILE#$HOME/}"
+
+    # --- Search including hidden files, skipping heavy dirs ---
+    local GREP_OUTPUT
+    GREP_OUTPUT=$(
+        find ${SEARCH_PATHS} \
+            -path "${EXCLUDE_FILE}" -prune -o \
+            -name '.git' -prune -o \
+            -name '.svn' -prune -o \
+            -name '.cache' -prune -o \
+            -name 'node_modules' -prune -o \
+            -type f -print 2>/dev/null | \
+        # The change is adding the 'i' flag here
+        xargs grep -HIni "${PATTERN}" 2>/dev/null | \
+        grep -v "${REL_EXCLUDE_FILE}"
+    )
+
+    if [ -z "${GREP_OUTPUT}" ]; then
+        print "No matches found."
+        return 0
+    fi
+
+    # --- Choose match via fzy ---
+    local CHOICE FILE LINE
+    CHOICE=$(print -- "${GREP_OUTPUT}" | fzy --prompt="Select match> ") || return 0
+    FILE=$(print -- "${CHOICE}" | cut -d: -f1)
+    LINE=$(print -- "${CHOICE}" | cut -d: -f2)
+
+    # --- Open in Ed and move to that line ---
+    if [ -n "$FILE" ] && [ -n "$LINE" ]; then
+        print "Opening $FILE at line $LINE in ed. Line $LINE will be printed."
+        # Pipes the line number and 'n' command to ed, then uses 'cat' to keep stdin open.
+        (printf '%s\n' "${LINE}" 'n' ; cat) | ed "$FILE"
+    fi
+}
